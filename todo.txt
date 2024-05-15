@@ -1,0 +1,4 @@
+Auto create post-match-review channels 
+Automatically ping members before event start
+Generate voice channel for events ahead of time
+Log attendance of log members @ start time of event
