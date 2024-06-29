@@ -5,6 +5,8 @@ import Common
 from discord import app_commands
 from discord.ext import commands
 import Config
+from Commands.Generate import generate
+
 
 intents = discord.Intents().all()
 #client = discord.Client(intents=intents)
@@ -40,6 +42,8 @@ token = Config.token
 async def slash_generate(interaction: discord.Interaction):
   text_channel: discord.TextChannel = bot.get_channel(interaction.channel_id)
   event_bot_id = check_bot_type(text_channel)
+  generate(text_channel, event_bot_id)
+
 
 @bot.tree.command(
     name="warnping",
@@ -50,7 +54,7 @@ async def slash_warnping(interaction: discord.Interaction):
   event_bot_id = check_bot_type(text_channel)
   
   roles = [984130470671450203]
-  await interaction.response.send_message("Please react Yes/No to the event")
+  #await interaction.response.send_message("Please react Yes/No to the event")
   await warnping(text_channel, event_bot_id, roles)
 
 
@@ -58,7 +62,7 @@ async def slash_warnping(interaction: discord.Interaction):
     name="warnlist",
     description="Sends a ping to all members not signed up.",
 )
-async def slash_warnping(interaction: discord.Interaction):
+async def slash_warnlist(interaction: discord.Interaction):
   text_channel: discord.TextChannel = bot.get_channel(interaction.channel_id)
   event_bot_id = check_bot_type(text_channel)
   

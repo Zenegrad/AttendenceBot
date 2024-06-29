@@ -5,11 +5,11 @@ class Event():
     title = description = None
 
     time    : datetime = None
-    accepted: dict = {}
-    declined: dict = {}
-    tenative: dict = {}
-    on_time : dict = {}
-    late    : dict = {}
+    accepted: set = set()
+    declined: set = set()
+    tenative: set = set()
+    on_time : set = set()
+    late    : set = set()
 
     def __init__(self, *args, **kwArgs) -> None:
         if(kwArgs):
