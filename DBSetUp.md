@@ -10,6 +10,7 @@ history - list of all actions that occur
     guild_id,
     user_id
 }
+
 events - catalog of events detected
 {
     id

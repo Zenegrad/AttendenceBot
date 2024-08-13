@@ -6,7 +6,13 @@ from discord import app_commands
 from discord.ext import commands
 import Config
 from Commands.Generate import generate
+import pymongo
+import util
+import datetime
 
+mongoClient = pymongo.MongoClient('mongodb://localhost:27017')
+
+mongoDB = mongoClient['attendenceBot']
 
 intents = discord.Intents().all()
 #client = discord.Client(intents=intents)
@@ -43,6 +49,32 @@ async def slash_generate(interaction: discord.Interaction):
   text_channel: discord.TextChannel = bot.get_channel(interaction.channel_id)
   event_bot_id = check_bot_type(text_channel)
   generate(text_channel, event_bot_id)
+
+
+@bot.tree.command(
+    name="pingrole",
+    description="Assign which role to use for warnping & warnlist"
+)
+@app_commands.describe(role="Role to ping")
+async def add_ping_role(interaction: discord.Interaction, role: discord.Role):
+  text_channel: discord.TextChannel = bot.get_channel(interaction.channel_id)
+
+  # Check if role already exists in roles table.
+  if mongoDB["roles"].find_one({"id": role.id}) is None:
+    print("Role not found in existing table")
+    print(role)
+
+    mongoDB['roles'].insert_one(
+      {
+        "id": role.id,
+        "name": role.name, 
+        "guild_id": role.guild.id, 
+        "last_modified": util.currentUTCTime(),
+        "enabled": True
+      })
+
+
+
 
 
 @bot.tree.command(
@@ -85,7 +117,7 @@ def check_bot_type(msg_channel: discord.TextChannel):
 @bot.event
 async def on_ready():
   await bot.change_presence(status=discord.Status.online)
-  await bot.tree.sync(guild=discord.Object(id=945811633471639552))
+  await bot.tree.sync()
   print('We have logged in as {0.user}'.format(bot))
 
 bot.run(token) 

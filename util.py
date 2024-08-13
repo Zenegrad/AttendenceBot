@@ -1,4 +1,6 @@
 import discord, Common, re, json
+from datetime import datetime, timezone
+
 
 #returns true if member has any of the given roles
 def member_has_roles(member, role_ids):
@@ -8,6 +10,9 @@ def member_has_roles(member, role_ids):
   return False
 
 
+# Get the current UTC time
+def currentUTCTime() -> datetime:
+    return datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
 
 #computes the members who haven't voted in the event except for bots and retireds and mercs
 async def missing_set_nicks(event_channel: discord.TextChannel, event_bot_id, role_ids):
