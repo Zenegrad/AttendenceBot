@@ -50,15 +50,22 @@ async def missing_set_nicks(event_channel: discord.TextChannel, event_bot_id, ro
               description_start = d_str.find('"description":')
 
               description_match = re.search('(\"description\":\s\".*\",\s\"title\")', d_str)
-              desc_text_match = re.search('"description":\s*"(.*)",\s*"title"', description_match.group(1))
 
-              fixed_description = desc_text_match.group(1).replace('"', "'")
+              fixed_description = ""
 
-              split = d_str.split(desc_text_match.group(1))
+              if description_match is not None:
+                desc_text_match = re.search('"description":\s*"(.*)",\s*"title"', description_match.group(1))
 
-              final_str = f"{split[0]}{fixed_description}{split[1]}"
+                fixed_description = desc_text_match.group(1).replace('"', "'")
+
+                split = d_str.split(desc_text_match.group(1))
+
+                final_str = f"{split[0]}{fixed_description}{split[1]}"
             
-              d = json.loads(final_str)
+                d = json.loads(final_str)
+              else:
+
+                d = json.loads(d_str)
 
         # Sesh
         if event_bot_id == Common.SESH_ID:
@@ -67,6 +74,8 @@ async def missing_set_nicks(event_channel: discord.TextChannel, event_bot_id, ro
           accepted_list = d['fields'][1]['value'][1:].split('\n')
           declined_list = d['fields'][3]['value'][1:].split('\n')
 
+
+          # Get a list of all accepted members
           for i in range(len(accepted_list)):
             print("test:")
             print(accepted_list[0].lstrip())
@@ -77,6 +86,8 @@ async def missing_set_nicks(event_channel: discord.TextChannel, event_bot_id, ro
               else:
                 break
 
+
+          # Get a list of all declined members
           for i in range(len(declined_list)):
             if(declined_list[0].lstrip() != '-'):
 
@@ -89,8 +100,10 @@ async def missing_set_nicks(event_channel: discord.TextChannel, event_bot_id, ro
           accepted_set = set(final_accepted)
           declined_set = set(final_declined)
 
+
+          # Get a list of all members in the channel that have the role.
           for member in event_channel.members:
-            if not member.bot and not member_has_roles(member, role_ids):
+            if not member.bot and member_has_roles(member, role_ids):
             
               memberId = member.id
 
@@ -115,7 +128,7 @@ async def missing_set_nicks(event_channel: discord.TextChannel, event_bot_id, ro
           #   final_declined.append(declined_list[i])
 
           for member in event_channel.members:
-            if not member.bot and not member_has_roles(member, role_ids):
+            if not member.bot and member_has_roles(member, role_ids):
               if member.display_name in accepted_list:
                 final_accepted.append(member.id)
               if member.display_name in declined_list:
