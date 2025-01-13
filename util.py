@@ -1,6 +1,6 @@
 import discord, Common, re, json
 from datetime import datetime, timezone
-
+import dateparser
 
 #returns true if member has any of the given roles
 def member_has_roles(member, role_ids):
@@ -8,6 +8,28 @@ def member_has_roles(member, role_ids):
     if role.id in role_ids:
       return True
   return False
+
+def getDatetime(time: str) -> datetime:
+  time = time.lower()
+
+  # Checks to see if usr input "in 5 hours", "in 5 minutes" etc. etc.
+  if('in' in time):
+    time_match = re.search('.+\s+(.*)\s+(.*)', time)
+
+    numerical = time_match.group(1)
+
+    period = time_match.group(2)
+    current_time = datetime.now(timezone.utc)
+
+    if 'hour' in period:
+      current_time.hour = current_time.hour - numerical
+
+       
+
+  final_time = dateparser.parse(time)
+  
+
+  return final_time
 
 
 # Get the current UTC time
@@ -142,3 +164,6 @@ async def missing_set_nicks(event_channel: discord.TextChannel, event_bot_id, ro
         return total_set.difference(accepted_set).difference(declined_set)
   else:
     print('Could not find event bot message')
+
+def validateTime():
+  print('test')

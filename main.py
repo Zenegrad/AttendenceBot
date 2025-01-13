@@ -23,24 +23,6 @@ event_bot_id = None
 
 token = Config.token
 
-
-# @bot.event
-# async def on_message(message):
-#   if message.author == bot.user:
-#     return
-#   if not message.guild:
-#     return
-#   msg_channel = message.channel
-#   clan_reps_role = 284108903858438155
-#   blood_eagles_role = 1140038135904997388
-#   friend_of_rat_role = 1137088085889384509
-#   test_role = 984130470671450203
-#   if message.content.startswith("warnlist"):
-#     await warnlist(msg_channel, event_bot_id, [clan_reps_role, blood_eagles_role, friend_of_rat_role, test_role])
-#   # elif message.content.startswith("warnping"):
-#   #   await warnping(msg_channel, event_bot_id, [clan_reps_role, blood_eagles_role, friend_of_rat_role, test_role])
-
-
 @bot.tree.command(
     name="generate",
     description="Syncs bot to take care of this event for you."
@@ -50,6 +32,24 @@ async def slash_generate(interaction: discord.Interaction):
   event_bot_id = check_bot_type(text_channel)
   generate(text_channel, event_bot_id)
 
+
+@bot.tree.command(
+    name="event",
+    description="Create an event"
+)
+@app_commands.describe(
+  title="Title of the event",
+  description="Details about the event",
+  start="Start time of event (timezones must be in UTC - 8/17/2024 @ 10:00pm, in 1 hour, Saturday 5pm )",
+  length="Length of event (1 hour, 30 min, 2 days etc etc..)"
+)
+async def create_event(interaction: discord.Interaction, title: str, start:str, description: str=None, length:str=None):
+  text_channel: discord.TextChannel = bot.get_channel(interaction.channel_id)
+
+  
+
+  print(interaction)
+  
 
 @bot.tree.command(
     name="pingrole",
