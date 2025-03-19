@@ -49,12 +49,16 @@ async def missing_set_nicks(event_channel: discord.TextChannel, event_bot_id, ro
               description_start = d_str.find('"description":')
 
               description_match = re.search('(\"description\":\s\".*\",\s\"title\")', d_str)
-              desc_text_match = re.search('"description":\s*"(.*)",\s*"title"', description_match.group(1))
+              fixed_description = "" 
 
-              fixed_description = desc_text_match.group(1).replace('"', "'")
+              if description_match.group(1) != None:
+                desc_text_match = re.search('"description":\s*"(.*)",\s*"title"', description_match.group(1))
 
-              split = d_str.split(desc_text_match.group(1))
+                fixed_description = desc_text_match.group(1).replace('"', "'")
 
+                split = d_str.split(desc_text_match.group(1))
+
+              
               final_str = f"{split[0]}{fixed_description}{split[1]}"
             
               d = json.loads(final_str)
@@ -141,7 +145,8 @@ async def missing_set_nicks(event_channel: discord.TextChannel, event_bot_id, ro
         members_not_reacted = total_set.difference(accepted_set).difference(declined_set).difference(maybe_set)
 
         # Remove zenegrad from pingable list
-        members_not_reacted.remove(125678499884171264)
+        if Common.ZEN_ID in members_not_reacted:
+          members_not_reacted.remove(Common.ZEN_ID)
 
         return members_not_reacted
   else:

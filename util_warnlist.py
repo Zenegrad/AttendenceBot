@@ -11,25 +11,56 @@ from util import missing_set_nicks, member_has_roles
 async def warnlist(msg_channel: discord.TextChannel, event_bot_id, role_ids):
   missing_set = await missing_set_nicks(msg_channel, event_bot_id, role_ids)
   display_message = ""
+  display_messages = []
 
   for member in msg_channel.members:
       if not member.bot and not member_has_roles(member, role_ids):
         if(member.id in missing_set):
             display_message = display_message + member.display_name + '\n'
 
-  await send_embed(msg_channel, "Wall of Shame: ", display_message,
+  # If the message is too long, split it into multiple messages
+  if len(display_message) > 2000:
+     for i in range(2000, 0, -1):
+        if display_message[i] == '<':
+            display_messages.append(display_message[:i])
+            display_messages.append(display_message[i:])  
+            break
+
+  # Send the messages
+  if len(display_messages) > 0:
+     for display_message in display_messages:
+        await send_embed(msg_channel, "Wall of Shame: ", display_message,
+                   discord.Color.green())
+  else:
+    await send_embed(msg_channel, "Wall of Shame: ", display_message,
                    discord.Color.green())
 
-#warnping
+# warnping 
 async def warnping(msg_channel: discord.TextChannel, event_bot_id, role_ids):
   missing_set = await missing_set_nicks(msg_channel, event_bot_id, role_ids)
+  display_messages = []
+
   display_message = ""
   for member in msg_channel.members:
     if not member.bot and not member_has_roles(member, role_ids):
       if(member.id in missing_set):
         display_message = display_message + member.mention
   display_message = display_message + ""
-  await send_msg(msg_channel, display_message) 
+
+  # If the message is too long, split it into multiple messages
+  if len(display_message) > 2000:
+     for i in range(2000, 0, -1):
+        if display_message[i] == '<':
+            display_messages.append(display_message[:i])
+            display_messages.append(display_message[i:])  
+            break
+
+  # Send the messages
+  if len(display_messages) > 0:
+     for display_message in display_messages:
+        await send_msg(msg_channel, display_message)
+  else:
+    await send_msg(msg_channel, display_message) 
 
 
 #Apollo message w/ 1 accepted but no declines

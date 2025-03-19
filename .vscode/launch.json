@@ -15,7 +15,7 @@
             "name": "Python Debugger: Main File",
             "type": "debugpy",
             "request": "launch",
-            "program": "C:\\Users\\murph\\Documents\\Programming\\Python\\RatPing\\main.py",
+            "program": "/c/Users/murph/Documents/Programming/AttendenceBot/main.py",
             "console": "integratedTerminal"
         }
     ]
