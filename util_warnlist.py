@@ -12,40 +12,23 @@ async def warnlist(msg_channel: discord.TextChannel, event_bot_id, role_ids):
   missing_set = await missing_set_nicks(msg_channel, event_bot_id, role_ids)
   display_message = ""
 
-  if len(missing_set) != 0:
+  for member in msg_channel.members:
+      if not member.bot and not member_has_roles(member, role_ids):
+        if(member.id in missing_set):
+            display_message = display_message + member.display_name + '\n'
 
-    for member in msg_channel.members:
-        if not member.bot and member_has_roles(member, role_ids):
-          if(member.id in missing_set):
-              display_message = display_message + member.display_name + '\n'
-    
-    await send_msg(msg_channel, "Members not reacted: ")  
-    await send_embed(msg_channel, "Wall of Shame: ", display_message,
+  await send_embed(msg_channel, "Wall of Shame: ", display_message,
                    discord.Color.green())
-  else: 
-    display_message = "All members signed up!"
-    await send_embed(msg_channel, "Everyone signed up!", "Everyone gets a gold medal! :first_place: ",
-                   discord.Color.green())
-
-  
 
 #warnping
 async def warnping(msg_channel: discord.TextChannel, event_bot_id, role_ids):
   missing_set = await missing_set_nicks(msg_channel, event_bot_id, role_ids)
   display_message = ""
-
-  if len(missing_set) != 0:
-
-    # Build the message to ping the fuck outta people.
-    for member in msg_channel.members:
-      if not member.bot and member_has_roles(member, role_ids):
-        if(member.id in missing_set):
-          display_message = display_message + member.mention
-    
-  else:
-    # If no one needs to be pinged, then display everyone signed up.
-    display_message = "All members signed up!"
-
+  for member in msg_channel.members:
+    if not member.bot and not member_has_roles(member, role_ids):
+      if(member.id in missing_set):
+        display_message = display_message + member.mention
+  display_message = display_message + ""
   await send_msg(msg_channel, display_message) 
 
 
